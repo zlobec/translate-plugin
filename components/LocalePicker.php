@@ -82,13 +82,21 @@ class LocalePicker extends ComponentBase
         $this->oldLocale = $this->translator->getLocale();
         
         $this->translator->setLocale($locale);
+        
+        // Check if request has href parameter
+        if ($href = post('href') {
+            // parameter is set, redirect ot href url
+            $pageUrl = $href;
+            
+        } else {
+        
+            $pageUrl = $this->makeLocaleUrlFromPage($locale);
 
-        $pageUrl = $this->makeLocaleUrlFromPage($locale);
-
-        // preserve the query string, if it exists
-        $query = http_build_query(request()->query());
-        $pageUrl = $query ? $pageUrl . '?' . $query : $pageUrl;
-
+            // preserve the query string, if it exists
+            $query = http_build_query(request()->query());
+            $pageUrl = $query ? $pageUrl . '?' . $query : $pageUrl;
+        }
+            
         if ($this->property('forceUrl')) {
             return Redirect::to($this->translator->getPathInLocale($pageUrl, $locale));
         }
